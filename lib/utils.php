@@ -150,11 +150,11 @@ class  Utils
      * @param $json_config_name
      * @return bool|mixed
      */
-    function getFileConfig($json_config_name)
+    function getFileConfig($file_name)
     {
-        if ($headers = get_headers('http://192.168.181.133/chuanqi.json')) {
-            if (strpos($headers[0], '404') === false) {
-                $url = "http://" . RES_CONFIG_URL . DIR_SEPARATOR . $json_config_name;
+        if ($headers = get_headers(RES_CONFIG_URL . DIR_SEPARATOR . $file_name)) {
+            if (strpos($headers[ZERO], '404') === false) {
+                $url = RES_CONFIG_URL . DIR_SEPARATOR . $file_name;
                 $pagecontent = trim(file_get_contents($url));
 
                 if (!isBlank($pagecontent)) // runtime
@@ -181,5 +181,88 @@ class  Utils
         }
         log_message::info('user sid 区间有误');
         return false;
+    }
+
+    /***
+     * @param $url
+     * @param $data
+     * @param string $coding
+     * @param string $refererUrl
+     * @param string $method
+     * @param string $contentType
+     * @param int $timeout
+     * @param bool $proxy
+     * @return bool|null|string
+     */
+    public function send_request($url, $data, $coding = 'gbk', $refererUrl = '',
+                                 $method = 'POST', $contentType = 'application/json;', $timeout = 30, $proxy = false)
+    {
+        $ch = $responseData = null;
+        //$data = trim(mb_convert_encoding($data, "gbk", "utf-8"));
+        if ('POST' === strtoupper($method)) {
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
+            curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+            $info = curl_getinfo($ch);
+            if ($refererUrl) {
+                curl_setopt($ch, CURLOPT_REFERER, $refererUrl);
+            }
+            $contentType = '';
+            if ($contentType) {
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $contentType);
+            }
+            if (isset($data['upload_file'])) {
+                $file = new \CURLFile($data['upload_file']['file'],
+                    $data['upload_file']['type'], $data['upload_file']['name']);
+                $params[$data['upload_file']['get_name']] = $file;
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+
+            } else {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+            }
+        } else if ('GET' === strtoupper($method)) {
+            if (is_string($data)) {
+                $real_url = $url . rawurlencode($data);
+            } else {
+                $real_url = $url . http_build_query($data);
+            }
+            $urldata = rawurlencode($data);
+            $ch = curl_init($real_url);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:' . $contentType]);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+            if ($refererUrl) {
+                curl_setopt($ch, CURLOPT_REFERER, $refererUrl);
+            }
+        } else {
+            $args = func_get_args();
+            return false;
+        }
+        if ($proxy) {
+            curl_setopt($ch, CURLOPT_PROXY, $proxy);
+        }
+        $ret = curl_exec($ch);
+        curl_close($ch);
+        $responseData = $ret;
+        //$responseData = mb_convert_encoding($ret, "utf-8", "gbk");
+        return $responseData;
+    }
+
+    /***
+     * @param $messige
+     * @param $code
+     */
+    public function errorCode($messige, $code)
+    {
+        $data = array(
+            'res' => $messige,
+            'status' => $code
+        );
+        return json_encode($data, JSON_UNESCAPED_UNICODE);
     }
 }

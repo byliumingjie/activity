@@ -22,19 +22,21 @@ class log_message
             $function = 'unknow';
         }
 
-        $message = '[' . $file . ": line: " . $line . ' funtion: ' . $function . ']';
+        $message = date(DATE_FORMAT_S, time()) . '[' . $file . ": line: " . $line . ' funtion: ' . $function . ']';
 
         foreach (func_get_args() as $item) {
             $message .= self::toString($item) . ' ';
         }
 
-        $file_name = LOG_SERVER_URL . date('YMD', time());
+        $classname_file = basename($file, '.php') . '.txt';
+
+        $file_name = LOG_SERVER_URL . date(DATE_FORMAT_D, time()) . '_' . $classname_file;
 
         if (!$file_name) {
             return -1;
         }
         if (self::isCli()) {
-             self::echoLine('[INFO]' . date('Y-m-d H:i:s') . ' ' . $message);
+            self::echoLine('[INFO]' . date(DATE_FORMAT_S, time()) . ' ' . $message);
         } else {
             if (error_log($message . "\n", 3, $file_name) == FALSE) {
                 return -1;

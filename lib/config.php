@@ -55,7 +55,7 @@ define('DATE_FORMAT_D', "Y-m-d");
 #file upload url
 //define('RES_URL', 'http://192.168.181.133:9095');
 //define('RES_PATH', dirname(dirname(dirname($_SERVER['DOCUMENT_ROOT']))) . '/res/config/');
-define('RES_CONFIG_URL', '192.168.181.133');// config file url
+define('RES_CONFIG_URL', 'http://192.168.181.133');// config file url
 
 # 常数zero
 define('ZERO', 0);

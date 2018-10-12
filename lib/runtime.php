@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 include "config.php";
 
-echo LIBDIR_TWO;
+//echo LIBDIR_TWO;
 
 function __autoload($classname)
 {

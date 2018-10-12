@@ -1,24 +1,21 @@
 <?php
 require "autoload.php";
 
-$apppid = 'chuanqi';
+/*$apppid = 'chuanqi';
 $server_id = 1;
 $openid = md5(time());
-$act_type = "ranking"; // $act_type = "lottery"; // signin
-$json_config_name = $apppid . '.json';
+$act_type = "ranking"; // $act_type = "lottery"; // signin*/
 
-$util = new Utils();
-$act_mod = new  ActivityModel();
+$activites_mode = new  ActivitesModel();
 
-$data = $util->getFileConfig($json_config_name);
-$act_rule = json_decode($data['act_rule'], true);
+$data = $activites_mode->getActivitesJson();
 
-switch ($act_type) {
+var_dump($data);
+
+switch ($activites_mode->act_type) {
     case 'ranking':
-        $redvar = $act_mod->rankingBack();
-        if ($redvar){
-            exit;
-        }
+        $redvar = $activites_mode->rankingBack();
+
         break;
     case 'lottery':
         break;

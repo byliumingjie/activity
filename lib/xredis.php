@@ -49,7 +49,7 @@ class Xredis
         $this->port = (!isset($config['port']) || isBlank($config['port'])) ? REDIS_PORT : $config['port'];
         $this->host = (!isset($config['host']) || isBlank($config['host'])) ? REDIS_HOST : $config['host'];
 
-        log_message::info($this->port, $this->host);
+        log_message::info($this->host, $this->port);
 
         if ($this->redis->connect($this->host, $this->port, 300)) {
 
@@ -61,8 +61,9 @@ class Xredis
                 $this->auth = $auth;
             }
             $this->expireTime = time() + $this->attr['timeout'];
+        } else {
+            log_message::info('redis connect FAILURE');
         }
-        log_message::info('redis connect FAILURE');
     }
 
     /**

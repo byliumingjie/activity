@@ -9,9 +9,11 @@
 class  ActivitySer extends Mysqldb
 {
     public $mysql;
+    public $redis = null;
 
     function __construct()
     {
+        $this->redis = new Xredis();
         $this->mysql = new Mysqldb();
     }
 
@@ -96,5 +98,20 @@ class  ActivitySer extends Mysqldb
             return $this->mysql->fetch_all();
         }
         return false;
+    }
+
+    /**
+     * 设置活动cache
+     * @param $key
+     * @param $data
+     */
+    public function setConfigCache($key, $app_id, $data)
+    {
+        // get redis cache
+        // if false get mysql data
+        // and set redis
+        // and return redis
+        //$redis->hSet('paylog', $orderid, $payLogStr);
+        $this->redis->hSet($key, $app_id, $data);
     }
 }

@@ -16,6 +16,9 @@ $act_rule = json_decode($data['act_rule'], true);
 switch ($act_type) {
     case 'ranking':
         $redvar = $act_mod->rankingBack();
+        if ($redvar){
+            exit;
+        }
         break;
     case 'lottery':
         break;

@@ -1,27 +1,21 @@
 <?php
 require "autoload.php";
 
-/*$apppid = 'chuanqi';
-$server_id = 1;
-$openid = md5(time());
-$act_type = "ranking"; // $act_type = "lottery"; // signin*/
-
 $activites_mode = new  ActivitesModel();
 
 $data = $activites_mode->getActivitesJson();
 
-var_dump($data);
-
 switch ($activites_mode->act_type) {
     case 'ranking':
-        $redvar = $activites_mode->rankingBack();
-
+        $ranking = $activites_mode->getRanking();
+        echo $ranking;
         break;
     case 'lottery':
+        echo "223213123rsefesdf4dg";
         break;
     case 'signin':
         break;
     default;
         break;
 }
-
+?>

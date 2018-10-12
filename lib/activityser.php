@@ -114,4 +114,9 @@ class  ActivitySer extends Mysqldb
         //$redis->hSet('paylog', $orderid, $payLogStr);
         $this->redis->hSet($key, $app_id, $data);
     }
+
+    public function setRankingCache()
+    {
+
+    }
 }

@@ -113,7 +113,6 @@ class log_message
      */
     public function echoLine()
     {
-
         $message = '';
         foreach (func_get_args() as $item) {
             $message .= $this->toString($item) . ' ';
@@ -125,7 +124,6 @@ class log_message
         } else {
             echo $text . '<br/>';
         }
-
     }
 
     public function isCli()

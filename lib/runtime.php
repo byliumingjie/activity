@@ -1,9 +1,9 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-include "config.php";
-
-//echo LIBDIR_TWO;
-
+include "define.php";
+/***
+ * @param $classname
+ */
 function __autoload($classname)
 {
     $class_file = strtolower($classname) . ".php";
@@ -16,12 +16,28 @@ function __autoload($classname)
 
     }
 }
-
-
+/***
+ * @param $object
+ * @return bool
+ */
 function isBlank($object)
 {
     if (is_null($object) || '' === $object || (is_array($object) && count($object) < 1) || !isset($object)) {
         return true;
     }
     return empty($object);
+}
+
+/***
+ * @param $tag
+ * @return bool
+ */
+function config($tag)
+{
+    $url = include "config.php";
+    if (isset($url[$tag]) && !empty($url[$tag])) {
+        return $url[$tag];
+    }
+    log_message::info('configs is null ');
+    return false;
 }
